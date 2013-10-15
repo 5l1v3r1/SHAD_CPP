@@ -6,23 +6,29 @@ using std::cout;
 using std::swap;
 using std::endl;
 
-template <typename T>
-void rotate(T begin, T end, int k)
+namespace array_utils
 {
-	int n = end - begin;
-	if (n == 0)
-		return;
-	k = ( (k % n) + n ) % n;
-	for(int i_shift = 0; i_shift < k; ++i_shift)
+	template <typename T>
+	void reverse(T begin, T end)
+	{	
+		while(begin != end && begin + 1 != end)
+		{
+			--end;
+			swap(*begin, *end);
+			++begin;		
+		}
+	}
+
+	template <typename T>
+	void rotate(T begin, T end, int k)
 	{
-		T current = begin;
-		T next = begin + 1;		
-		while (next != end)
-		{			
-			swap(*next , *begin);
-			++current;
-			++next;
-		}		
+		int n = end - begin;
+		if (n == 0)
+			return;
+		k = ( (k % n) + n ) % n;
+		array_utils::reverse(begin, end);
+		array_utils::reverse(begin, begin + k);
+		array_utils::reverse(begin + k, end);	
 	}
 }
 
@@ -46,13 +52,13 @@ int main()
 	cout << "\t\t" << "Rotate Test" << endl; 
 	
 	int first_array[] = {1, 2, 3, 4, 5};
-	rotate(first_array, first_array + 5, 3);
+	array_utils::rotate(first_array, first_array + 5, 3);
 	cout << "Rotate {1, 2, 3, 4, 5} by 3 : ";
 	print(first_array, first_array + 5);
 
 
 	int second_array[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	rotate(second_array, second_array + 10, -3);
+	array_utils::rotate(second_array, second_array + 10, -3);
 	cout << "Rotate {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} by -3 : ";
 	print(second_array,second_array + 10);
 
@@ -61,7 +67,7 @@ int main()
 	{
 		first_vector.push_back(i + 1);
 	}
-	rotate(first_vector.begin(), first_vector.end(), 8);
+	array_utils::rotate(first_vector.begin(), first_vector.end(), 8);
 	cout << "Rotate {1, 2, 3, 4, 5} by 8 : ";
 	print(first_vector.begin(),first_vector.end());
 
@@ -70,9 +76,4 @@ int main()
 	{
 		second_vector.push_back(i + 1);
 	}
-	rotate(second_vector.begin(), second_vector.end(), -3);
-	cout << "Rotate {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} by -3 : ";
-	print(second_vector.begin(), second_vector.end());
-
-	return 0;
-}
+	array_utils:
